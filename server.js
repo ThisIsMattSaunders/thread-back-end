@@ -20,7 +20,7 @@ app.use(cors());
 app.use('/uploads', express.static('uploads'));
 
 
-mongoose.connect(`mongodb+srv://${config.MONGO_USER}:${config.MONGO_PASSWORD}@${config.MONGO_CLUSTER_NAME}.mongodb.net/summative3?retryWrites=true&w=majority`, {useNewUrlParser: true, useUnifiedTopology: true});
+mongoose.connect(`mongodb+srv://${config.MONGO_USER}:${config.MONGO_PASSWORD}@${config.MONGO_CLUSTER_NAME}.mongodb.net/test?retryWrites=true&w=majority`, {useNewUrlParser: true, useUnifiedTopology: true});
 
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
@@ -33,13 +33,13 @@ const storage = multer.diskStorage({
         cb(null, './uploads');
     },
     filename: function(req, file, cb) {
-    console.log(file);
-    var filename = file.originalname;
-    filename = filename.replace(/\s/g,'');
-    // const str = file.filename;
-    // str = str.replace(/\s+/g, '');
-    cb(null, Date.now() + '-' + filename);
-  }
+        console.log(file);
+        var filename = file.originalname;
+        filename = filename.replace(/\s/g,'');
+        // const str = file.filename;
+        // str = str.replace(/\s+/g, '');
+        cb(null, Date.now() + '-' + filename);
+    }
 
 });
 
@@ -224,7 +224,7 @@ app.patch('/editItem/:id', function(req,res){
             res.send('401');
         }
     }).catch(err=> res.send('cannot find Item with that id'));
-      // res.send('sent from update');
+    // res.send('sent from update');
 });
 
 
@@ -269,18 +269,18 @@ app.get('/getItem/:id', function(req, res){
 });
 
 app.patch('/buyItem/:id', function(req,res){
-  console.log('connect to buy now');
+    console.log('connect to buy now');
     const id = req.params.id;
     console.log(id);
     Item.findById(id, function(err,item){
-      console.log(item);
-      const soldItem = {
-          bought: true
-      };
-      Item.updateOne({_id: id}, soldItem).then(result =>{
-          res.send(result);
-      }).catch(err => res.send(err));
-  }).catch(err=> res.send(`Cannot buy this item.`));
+        console.log(item);
+        const soldItem = {
+            bought: true
+        };
+        Item.updateOne({_id: id}, soldItem).then(result =>{
+            res.send(result);
+        }).catch(err => res.send(err));
+    }).catch(err=> res.send(`Cannot buy this item.`));
 });
 
 app.listen(port, () => {
